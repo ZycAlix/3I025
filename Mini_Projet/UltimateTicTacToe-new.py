@@ -48,11 +48,12 @@ def neighbors(point1,unreachable):
         if (point1[0]+dirt[0],point1[1]+dirt[1]) not in unreachable:
             list_neigh.append((point1[0]+dirt[0],point1[1]+dirt[1]))
     return list_neigh
-    
+
+#We add this function to that situation when we have differente terrain
 def cost(current, next):
     return 1
 
-
+#We have tried serveral methods to finish this function, it's the simplest tpye
 def astar(start, end, unreachable):
     frontier = PriorityQueue()
     frontier.put(start, 0)
@@ -86,6 +87,8 @@ def astar(start, end, unreachable):
 #-------------------------------------------   
 #  Functions TicTacToe
 #-------------------------------------------
+
+#Return all of cases used to play TicTacToe
 def bigTicTacToeBoard(wallStates):
     bigBoard = []
     for x in range(4,15):
@@ -110,6 +113,7 @@ def smalleTicTacToeBoard(bigBoard, nb_Board):
         smalleBoard.append(line)
     return smalleBoard
 
+#Return a dictionary collecting the states of each cases 
 def initialisationStates(bigBoard):
     states = {}
     for i in range(len(bigBoard)):
@@ -121,6 +125,7 @@ def initialisationStates(bigBoard):
 def getStates(states,x,y):
     return states[str((x,y))];
 
+#Verify a small board is full or not with checking its states
 def isSmalleBoardFull(bigBoard,nb_Board,states):
     smalleBoard = smalleTicTacToeBoard(bigBoard,nb_Board)
     full = True
@@ -131,6 +136,7 @@ def isSmalleBoardFull(bigBoard,nb_Board,states):
                 full = False
     return full
 
+#Verify a smalle board is win or not and by which player
 def isSmalleBoardWin(bigBoard,nb_Board,states):
     smalleBoard = smalleTicTacToeBoard(bigBoard,nb_Board)
     win = False
@@ -169,7 +175,7 @@ def isSmalleBoardWin(bigBoard,nb_Board,states):
 
     return win,numPlayer
 
-
+#Strategy random
 def strategyRandom(bigBoard,states):
     nb_Board = -1
     (x,y) = (-1,-1)
@@ -187,6 +193,7 @@ def strategyRandom(bigBoard,states):
             break
     return (x,y)
 
+#Strategy Cote to win
 def strategyGreedy(bigBoard, states):
     ordre = [8,4,0,6,2,7,5,1]
     nb_Board = -1
@@ -201,6 +208,7 @@ def strategyGreedy(bigBoard, states):
         if(getStates(states,x,y) == -1):
             break
     return (x,y)
+
 
 def gameFinished(bigBoard,states):
     #check up all of smalleBoard
