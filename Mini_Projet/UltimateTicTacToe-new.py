@@ -187,6 +187,20 @@ def strategyRandom(bigBoard,states):
             break
     return (x,y)
 
+def strategyGreedy(bigBoard, states):
+    ordre = [8,4,0,6,2,7,5,1]
+    nb_Board = -1
+    for n in ordre:
+        if not isSmalleBoardFull(bigBoard,n,states) and not isSmalleBoardWin(bigBoard,n,states)[0]:
+            nb_Board = n
+            break
+    smalleBoard = smalleTicTacToeBoard(bigBoard,n)
+    (x,y) = (-1,-1)
+    for n in ordre:
+        (x,y) = smalleBoard[(n//3)][n%3]
+        if(getStates(states,x,y) == -1):
+            break
+    return (x,y)
 
 def gameFinished(bigBoard,states):
     #check up all of smalleBoard
@@ -430,7 +444,11 @@ def main():
             k = k + 1
             # on active le joueur suivant
             # et on place la fiole suivante
-        foile_a_deposer = strategyRandom(bigBoard,states)
+        if j%2 == 0: 
+            foile_a_deposer = strategyRandom(bigBoard,states)
+        else:
+            foile_a_deposer = strategyGreedy(bigBoard,states)
+            
         chemin = astar((row,col),foile_a_deposer,wallStates)
         l = 0
 
