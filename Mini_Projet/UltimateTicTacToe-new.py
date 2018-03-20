@@ -134,6 +134,7 @@ def isSmalleBoardFull(bigBoard,nb_Board,states):
 def isSmalleBoardWin(bigBoard,nb_Board,states):
     smalleBoard = smalleTicTacToeBoard(bigBoard,nb_Board)
     win = False
+    numPlayer = -1
     #Check up row 
     for i in range(len(smalleBoard)):
         (x,y) = smalleBoard[i][0]
@@ -141,7 +142,8 @@ def isSmalleBoardWin(bigBoard,nb_Board,states):
         (g,h) = smalleBoard[i][2]
         if getStates(states,x,y) != -1 and getStates(states,x,y) == getStates(states,a,b) and getStates(states,a,b) == getStates(states,g,h):
             win = True
-            break 
+            numPlayer = getStates(states,x,y)
+            return win,numPlayer
     
     #check up col 
     for i in range(len(smalleBoard)):
@@ -150,18 +152,22 @@ def isSmalleBoardWin(bigBoard,nb_Board,states):
         (g,h) = smalleBoard[2][i]
         if getStates(states,x,y) != -1 and getStates(states,x,y) == getStates(states,a,b) and getStates(states,a,b) == getStates(states,g,h):
             win = True
-            break   
+            numPlayer = getStates(states,x,y)
+            return win,numPlayer
 
     #check up diagonal 
     if(getStates(states,smalleBoard[0][0][0],smalleBoard[0][0][1]) !=-1 and getStates(states,smalleBoard[1][1][0],smalleBoard[1][1][1]) == getStates(states,smalleBoard[0][0][0],smalleBoard[0][0][1])):
         if(getStates(states,smalleBoard[1][1][0],smalleBoard[1][1][1]) == getStates(states,smalleBoard[2][2][0],smalleBoard[2][2][1])):
+            numPlayer = getStates(states,smalleBoard[1][1][0],smalleBoard[1][1][1])
             win = True
+            return win,numPlayer
 
     if(getStates(states,smalleBoard[0][2][0],smalleBoard[0][2][1]) !=-1 and getStates(states,smalleBoard[1][1][0],smalleBoard[1][1][1]) == getStates(states,smalleBoard[0][2][0],smalleBoard[0][2][1])):
         if(getStates(states,smalleBoard[1][1][0],smalleBoard[1][1][1]) == getStates(states,smalleBoard[2][0][0],smalleBoard[2][0][1])):
             win = True
+            return win,numPlayer
 
-    return win
+    return win,numPlayer
 
 
 def strategyRandom(bigBoard,states):
@@ -170,7 +176,7 @@ def strategyRandom(bigBoard,states):
     while True:
         nb_Board = random.randint(0,8)
 
-        if not isSmalleBoardFull(bigBoard,nb_Board,states) and not isSmalleBoardWin(bigBoard,nb_Board,states):
+        if not isSmalleBoardFull(bigBoard,nb_Board,states) and not isSmalleBoardWin(bigBoard,nb_Board,states)[0]:
             break
     smalleBoard = smalleTicTacToeBoard(bigBoard,nb_Board)
 
@@ -188,80 +194,80 @@ def gameFinished(bigBoard,states):
     tmp = []
     for n in [0,1,2]:
         tmp.append(isSmalleBoardWin(bigBoard,n,states))
-    if (tmp[0]==tmp[1] and tmp[0]== True and tmp[0] == tmp[2]):
+    if (tmp[0]==tmp[1] and tmp[0][0]== True and tmp[0] == tmp[2]):
         gameOver = True
-        print("Game Over with thses smalle borad 0,1,2")
+        print("Game Over with thses smalle borad 0,1,2, winner : %f ", tmp[0][1])
         return gameOver
     else: 
         tmp = []
 
     for n in [3,4,5]:
         tmp.append(isSmalleBoardWin(bigBoard,n,states))
-    if (tmp[0]==tmp[1] and tmp[0]== True and tmp[0] == tmp[2]):
+    if (tmp[0]==tmp[1] and tmp[0][0]== True and tmp[0] == tmp[2]):
         gameOver = True
-        print("Game Over with thses smalle borad 3,4,5")
+        print("Game Over with thses smalle borad 3,4,5, winner : %f ", tmp[0][1])
         return gameOver
     else:
         tmp = []
 
     for n in [6,7,8]:
         tmp.append(isSmalleBoardWin(bigBoard,n,states))
-    if (tmp[0]==tmp[1] and tmp[0]== True and tmp[0] == tmp[2]):
+    if (tmp[0]==tmp[1] and tmp[0][0]== True and tmp[0] == tmp[2]):
         gameOver = True
-        print("Game Over with thses smalle borad 6,7,8")
+        print("Game Over with thses smalle borad 6,7,8, winner : %f ", tmp[0][1])
         return gameOver
     else:
         tmp = []
 
     for n in [0,3,6]:
         tmp.append(isSmalleBoardWin(bigBoard,n,states))
-    if (tmp[0]==tmp[1] and tmp[0]== True and tmp[0] == tmp[2]):
+    if (tmp[0]==tmp[1] and tmp[0][0]== True and tmp[0] == tmp[2]):
         gameOver = True
-        print("Game Over with thses smalle borad 0,3,6")
+        print("Game Over with thses smalle borad 0,3,6, winner : %f ", tmp[0][1])
         return gameOver
     else:
         tmp = []
 
     for n in [1,4,7]:
         tmp.append(isSmalleBoardWin(bigBoard,n,states))
-    if (tmp[0]==tmp[1] and tmp[0]== True and tmp[0] == tmp[2]):
+    if (tmp[0]==tmp[1] and tmp[0][0]== True and tmp[0] == tmp[2]):
         gameOver = True
-        print("Game Over with thses smalle borad 1,4,7")
+        print("Game Over with thses smalle borad 1,4,7, winner : %f ", tmp[0][1])
         return gameOver
     else:
         tmp = []
 
     for n in [2,5,8]:
         tmp.append(isSmalleBoardWin(bigBoard,n,states))
-    if (tmp[0]==tmp[1] and tmp[0]== True and tmp[0] == tmp[2]):
+    if (tmp[0]==tmp[1] and tmp[0][0]== True and tmp[0] == tmp[2]):
         gameOver = True
-        print("Game Over with thses smalle borad 2,5,8")
+        print("Game Over with thses smalle borad 2,5,8, winner : %f ", tmp[0][1])
         return gameOver
     else:
         tmp = []
 
     for n in [0,4,8]:
         tmp.append(isSmalleBoardWin(bigBoard,n,states))
-    if (tmp[0]==tmp[1] and tmp[0]== True and tmp[0] == tmp[2]):
+    if (tmp[0]==tmp[1] and tmp[0][0]== True and tmp[0] == tmp[2]):
         gameOver = True
-        print("Game Over with thses smalle borad 0,4,8")
+        print("Game Over with thses smalle borad 0,4,8, winner : %f ", tmp[0][1])
         return gameOver
     else:
         tmp = []
 
     for n in [2,4,6]:
         tmp.append(isSmalleBoardWin(bigBoard,n,states))
-    if (tmp[0]==tmp[1] and tmp[0]== True and tmp[0] == tmp[2]):
+    if (tmp[0]==tmp[1] and tmp[0][0]== True and tmp[0] == tmp[2]):
         gameOver = True
-        print("Game Over with thses smalle borad 2,4,6")
+        print("Game Over with thses smalle borad 2,4,6, winner : %f ", tmp[0][1])
         return gameOver
     else:
         tmp = []
 
     for n in range(len(bigBoard)):
-        if not isSmalleBoardWin(bigBoard,n,states) and not isSmalleBoardFull(bigBoard,n,states):
-            tmp.append(False)
-        if tmp == []:
+        if isSmalleBoardWin(bigBoard,n,states)[0] or isSmalleBoardFull(bigBoard,n,states):
+            tmp.append(True)
+        if len(tmp) == 9:
             gameOver = True
             print("Game Over with a draw")
     return gameOver
