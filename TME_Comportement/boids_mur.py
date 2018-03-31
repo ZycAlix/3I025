@@ -113,52 +113,70 @@ class Agent(object):
         #   ces fonctions *programment* la commande motrice, mais *ne l'exécute pas*
         #   la dernière valeur allouée exécutée. Chaque fonction doit donc être appelé une seule fois.
         
-        # Ici, on a au total 3 règles : attraction, répulsion, orientation, on choisit le plus proche comme la condition.
-        
+        #On met d'abord hate_Wall en première priorité.
         sensor_infos = sensors[p]
         dist_min = 999
         index_min = -1
 
         for i, impact in enumerate(sensor_infos) : # impact est donc un namedtuple avec plein d'infos sur l'impact: namedtuple('RayImpactTuple', ['sprite','layer','x', 'y','dist_from_border','dist_from_center','rel_angle_degree','abs_angle_degree'])
             if impact.dist_from_border <= maxSensorDistance :
-                if impact.layer == 'joueur':
+                if impact.layer == 'obstacle' :
                     if impact.dist_from_border < dist_min :
                         dist_min = impact.dist_from_border
                         index_min = i
 
-        if dist_min <= maxSensorDistance :
-            if self.id % 3 == 0 : # règle attraction 
-                if index_min > 3 :
-                    self.setRotationValue(1)
-                    self.setTranslationValue(1)
-                else :
-                    self.setRotationValue(-1)
-                    self.setTranslationValue(1)
-            elif self.id % 3 == 1 : #règle répulsion
-                if index_min > 3 :
-                    self.setRotationValue(-1)
-                    self.setTranslationValue(1)
-                else :
-                    self.setRotationValue(1)
-                    self.setTranslationValue(1)
-            else : # règle orientation
-                robot_plus_proche = sensor_infos[index_min].sprite
-                orientation = robot_plus_proche.orientation()
-                if orientation - p.orientation() > 0 and orientation - p.orientation() <= 180 : # on sait que l'orientation est positive et absolue
-                    self.setRotationValue(-1)
-                elif orientation - p.orientation() < 0 and orientation - p.orientation() >= -180 :
-                    self.setRotationValue(1)
-                elif orientation - p.orientation() > 180 and orientation - p.orientation() < 360 :
-                    self.setRotationValue(1)
-                elif orientation - p.orientation() < -180 and orientation - p.orientation() > -360 :
-                    self.setRotationValue(-1)
-                else : 
-                    print("Current robot "+ str(self.id)+ " and his closet neighboor "+ str(robot_plus_proche.numero)+" have the same orientation")# Même orientation, on fait rien 
-
-        else : # donne une aleatoire orientation vers laquelle le robot essaye de bouguer
-            self.setRotationValue(random()*2 -1)
+        if index_min > 3 and dist_min <= maxSensorDistance:
+            self.setRotationValue(-1)
             self.setTranslationValue(1)
-            print("++++++++++++++++++++") 
+        elif index_min <= 3 and dist_min <= maxSensorDistance and index_min >= 0:
+            self.setRotationValue(1)
+            self.setTranslationValue(1)
+        # Ici, on a au total 3 règles : attraction, répulsion, orientation, on choisit le plus proche comme la condition.    
+        else :
+            sensor_infos = sensors[p]
+            dist_min = 999
+            index_min = -1
+
+            for i, impact in enumerate(sensor_infos) : # impact est donc un namedtuple avec plein d'infos sur l'impact: namedtuple('RayImpactTuple', ['sprite','layer','x', 'y','dist_from_border','dist_from_center','rel_angle_degree','abs_angle_degree'])
+                if impact.dist_from_border <= maxSensorDistance :
+                    if impact.layer == 'joueur':
+                        if impact.dist_from_border < dist_min :
+                            dist_min = impact.dist_from_border
+                            index_min = i
+
+            if dist_min <= maxSensorDistance :
+                if self.id % 3 == 0 : # règle attraction 
+                    if index_min > 3 :
+                        self.setRotationValue(1)
+                        self.setTranslationValue(1)
+                    else :
+                        self.setRotationValue(-1)
+                        self.setTranslationValue(1)
+                elif self.id % 3 == 1 : #règle répulsion
+                    if index_min > 3 :
+                        self.setRotationValue(-1)
+                        self.setTranslationValue(1)
+                    else :
+                        self.setRotationValue(1)
+                        self.setTranslationValue(1)
+                else : # règle orientation
+                    robot_plus_proche = sensor_infos[index_min].sprite
+                    orientation = robot_plus_proche.orientation()
+                    if orientation - p.orientation() > 0 and orientation - p.orientation() <= 180 : # on sait que l'orientation est positive et absolue
+                        self.setRotationValue(-1)
+                    elif orientation - p.orientation() < 0 and orientation - p.orientation() >= -180 :
+                        self.setRotationValue(1)
+                    elif orientation - p.orientation() > 180 and orientation - p.orientation() < 360 :
+                        self.setRotationValue(1)
+                    elif orientation - p.orientation() < -180 and orientation - p.orientation() > -360 :
+                        self.setRotationValue(-1)
+                    else : 
+                        print("Current robot "+ str(self.id)+ " and his closet neighboor "+ str(robot_plus_proche.numero)+" have the same orientation")# Même orientation, on fait rien 
+
+            else : # donne une aleatoire orientation vers laquelle le robot essaye de bouguer
+                self.setRotationValue(random()*2 -1)
+                self.setTranslationValue(1)
+                print("++++++++++++++++++++") 
 
         # monitoring - affiche diverses informations sur l'agent et ce qu'il voit.
         # pour ne pas surcharger l'affichage, je ne fais ca que pour le player 1
@@ -317,7 +335,7 @@ game.auto_refresh = False # display will be updated only if game.mainiteration()
 game.frameskip = frameskip
 atexit.register(onExit)
 
-#setupArena() # on ne met pas à jour l'obstacle
+setupArena()
 setupAgents()
 game.mainiteration()
 
